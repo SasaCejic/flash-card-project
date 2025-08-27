@@ -5,6 +5,7 @@ import random
 BACKGROUND_COLOR = "#B1DDC6"
 TITLE_FONT = ("Arial", 40, "italic")
 WORD_FONT = ("Arial", 60, "bold")
+INFO_FONT = ("Arial", 40)
 
 words_dict = []
 word_pair = {}
@@ -13,18 +14,39 @@ words_to_learn = []
 # Reading the words
 def read_words():
     global words_dict
-    df = pandas.read_csv("data/french_words.csv")
-    words_dict = df.to_dict(orient="records")
+    try:
+        df = pandas.read_csv("data/words_to_learn.csv")
+    except (FileNotFoundError, pandas.errors.EmptyDataError):
+        df = pandas.read_csv("data/french_words.csv")
+    finally:
+        words_dict = df.to_dict(orient="records")
 
 def pick_a_random_pair():
     global words_dict
     global word_pair
-    word_pair = random.choice(words_dict)
+    try:
+        word_pair = random.choice(words_dict)
+    except IndexError:
+        global canvas
+        global wrong_button
+        global right_button
+        canvas.delete("title")
+        canvas.delete("word")
+        canvas.delete("image")
+        wrong_button.destroy()
+        right_button.destroy()
+        canvas.destroy()
+
+        new_canvas = Canvas(width=800, height=526, bg=BACKGROUND_COLOR, highlightthickness=0)
+        new_canvas.create_text(400, 263, text="No more words to display!", font=INFO_FONT)
+        new_canvas.grid(row=0, column=0, columnspan=2)
 
 def show_card_front():
     global word_pair
     global canvas
     global card_front
+    global words_dict
+
     canvas.create_image(400, 263, image=card_front, tags="image")
     canvas.delete("title")
     canvas.delete("word")
@@ -57,8 +79,9 @@ def right():
     show_card_front()
     flip_timer = window.after(3000, show_card_back)
 
-def write_words_to_learn():
-    pass
+def save_words_to_learn():
+    global words_to_learn
+    pandas.DataFrame(words_to_learn).to_csv("data/words_to_learn.csv", index=False)
 
 read_words()
 
@@ -88,3 +111,5 @@ right_button.grid(row=1, column=1)
 flip_timer = window.after(3000, show_card_back)
 
 window.mainloop()
+
+save_words_to_learn()
