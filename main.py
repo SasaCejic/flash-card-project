@@ -24,9 +24,10 @@ def read_words():
 def pick_a_random_pair():
     global words_dict
     global word_pair
-    try:
+
+    if len(words_dict) > 0:
         word_pair = random.choice(words_dict)
-    except IndexError:
+    else:
         global canvas
         global wrong_button
         global right_button
