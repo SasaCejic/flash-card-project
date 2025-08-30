@@ -87,7 +87,8 @@ def right():
 
 def save_words_to_learn():
     global words_to_learn
-    pandas.DataFrame(words_to_learn).to_csv("data/words_to_learn.csv", index=False)
+    if len(words_to_learn) > 0:
+        pandas.DataFrame(words_to_learn).to_csv("data/words_to_learn.csv", index=False)
 
 read_words()
 
