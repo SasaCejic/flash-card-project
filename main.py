@@ -38,30 +38,35 @@ def pick_a_random_pair():
         canvas.destroy()
 
         new_canvas = Canvas(width=800, height=526, bg=BACKGROUND_COLOR, highlightthickness=0)
-        new_canvas.create_text(400, 263, text="No more words to display!", font=INFO_FONT)
+        new_canvas.create_text(400, 263, text="No more words to display!", font=INFO_FONT, fill="white")
         new_canvas.grid(row=0, column=0, columnspan=2)
 
 def show_card_front():
-    global word_pair
     global canvas
-    global card_front
-    global words_dict
 
-    canvas.create_image(400, 263, image=card_front, tags="image")
-    canvas.delete("title")
-    canvas.delete("word")
-    canvas.create_text(400, 150, text="French", font=TITLE_FONT, tags="title")
-    canvas.create_text(400, 263, text=word_pair["French"], font=WORD_FONT, tags="word")
+    if canvas.winfo_exists():
+        global word_pair
+        global card_front
+        global words_dict
+
+        canvas.create_image(400, 263, image=card_front, tags="image")
+        canvas.delete("title")
+        canvas.delete("word")
+        canvas.create_text(400, 150, text="French", font=TITLE_FONT, tags="title")
+        canvas.create_text(400, 263, text=word_pair["French"], font=WORD_FONT, tags="word")
+
 
 def show_card_back():
-    global word_pair
     global canvas
-    global card_back
-    canvas.create_image(400, 263, image=card_back, tags="image")
-    canvas.delete("title")
-    canvas.delete("word")
-    canvas.create_text(400, 150, text="English", font=TITLE_FONT, fill="white", tags="title")
-    canvas.create_text(400, 263, text=word_pair["English"], font=WORD_FONT, fill="white", tags="word")
+
+    if canvas.winfo_exists():
+        global word_pair
+        global card_back
+        canvas.create_image(400, 263, image=card_back, tags="image")
+        canvas.delete("title")
+        canvas.delete("word")
+        canvas.create_text(400, 150, text="English", font=TITLE_FONT, fill="white", tags="title")
+        canvas.create_text(400, 263, text=word_pair["English"], font=WORD_FONT, fill="white", tags="word")
 
 def wrong():
     global flip_timer, words_to_learn, word_pair
